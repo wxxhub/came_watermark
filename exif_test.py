@@ -48,9 +48,19 @@ def test_video_use_2():
     img = draw_watermark('video_use', img, c, exif_info)
     save_resize(img).save("test/test_video_use_2.jpg", exif=piexif.dump(exif_origin))
 
+def test_video_use_white_background():
+    c = Config()
+    c.author = "ValiantBunny"
+    c.children_watermark = "bottom"
+    c.with_shadow = True
+    img = Image.open('test/data/test_in.jpg')
+    exif_info, exif_origin = exif.get_exif_info(img)
+    img = draw_watermark('video_use_white_background', img, c, exif_info)
+    save_resize(img).save("test/test_video_use_video_use_white_background.jpg", exif=piexif.dump(exif_origin))
+
 
 if __name__ == '__main__':
-    # test_bottom_watermark()
-    # test_bottom_frame()
-    # test_video_use()
+    test_bottom_watermark()
+    test_bottom_frame()
+    test_video_use()
     test_video_use_2()

@@ -7,6 +7,7 @@ from .watermark import Watermark
 from .bottom import BottomWatermark
 from .bottom_frame import BottomFrameWatermark
 from .video_use import VideoUseWatermark
+from .video_use_white_background import VideoUseWhiteBackgroundWatermark
 
 
 def get_watermark(t) -> Watermark:
@@ -16,6 +17,8 @@ def get_watermark(t) -> Watermark:
         return BottomFrameWatermark()
     elif t == 'video_use':
         return VideoUseWatermark()
+    elif t == 'video_use_white_background':
+        return VideoUseWhiteBackgroundWatermark()
     return BottomWatermark()
 
 

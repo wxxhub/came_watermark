@@ -21,6 +21,8 @@ class VideoUseWatermark(Watermark):
         enhancer = ImageEnhance.Brightness(im_blur)
         im_blur = enhancer.enhance(0.7)
 
+        # im_blur = Image.new("RGB", (WIDTH_8K, HEIGHT_8K), color='white')
+
         if config.children_watermark == 'bottom':
             m = BottomWatermark()
         else:

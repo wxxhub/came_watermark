@@ -30,3 +30,6 @@ optional arguments:
 
 #### 视频用高斯模糊背景8K 示例2
 ![](test/test_video_use_2.jpg)
+
+#### 视频用纯白背景8K
+![](test/test_video_use_video_use_white_background.jpg)
