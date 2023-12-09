@@ -6,6 +6,7 @@ import exif
 from watermark.draw import draw_watermark
 from watermark.config import Config
 import piexif
+from concurrent.futures import ThreadPoolExecutor
 
 
 def args_parser():
@@ -17,7 +18,9 @@ def args_parser():
     parser.add_argument('-i', '--intput_dir', type=str, default="", help="image input file")
     parser.add_argument('-o', '--output_dir', type=str, default="", help="image output file")
     parser.add_argument('-d', '--draw_type', type=str, default="bottom", help="draw_type ['bottom', 'bottom_frame', "
-                                                                        "'video_use']")
+                                                                              "'video_use']")
+    parser.add_argument('-s', '--with_shadow', type=bool, default=False, help="image with shadow")
+    parser.add_argument('-c', '--children', type=str, default="", help="children type")
     return parser.parse_args()
 
 
@@ -58,6 +61,27 @@ def add_watermark(config, file, outfile, draw_type):
     img.save(outfile, exif=piexif.dump(exif_origin))
     return
 
+
+def process(f, intput_dir, output_dir, config, draw_type):
+    support_file_type = ['jpg', 'jpeg', 'png', 'raw', "JPG", "JPEG", "PNG"]
+
+    support = False
+    for s in support_file_type:
+        if s in f:
+            support = True
+            break
+
+    if not support:
+        return "不支持的文件类型:" + f
+
+    file = os.path.join(intput_dir, f)
+    out_file_name = 'm_' + f
+    save_file = os.path.join(output_dir, out_file_name)
+    add_watermark(config, file, save_file, draw_type)
+
+    return 'save image ' + save_file
+
+
 def main():
     c = Config()
 
@@ -68,6 +92,8 @@ def main():
     c.author = args.author
     output_dir = args.output_dir
     draw_type = args.draw_type
+    c.with_shadow = args.with_shadow
+    c.children_watermark = args.children
 
     if len(args.file) != 0:
         if output_dir == "":
@@ -79,7 +105,7 @@ def main():
         file = args.file[0]
         file_name = os.path.basename(args.file[0])
         print("file_name ", file_name)
-        save_file = os.path.join(output_dir, 'm_'+file_name)
+        save_file = os.path.join(output_dir, 'm_' + file_name)
         add_watermark(c, file, save_file, draw_type)
         print('save image ', save_file)
 
@@ -91,16 +117,17 @@ def main():
             os.makedirs(output_dir)
 
         print("file num:", len(files))
+        sum = len(files)
         i = 1
-        for f in files:
-            file = os.path.join(args.intput_dir, f)
-            out_file_name = 'm_' + f
-            save_file = os.path.join(output_dir, out_file_name)
-            add_watermark(c, file, save_file, draw_type)
+        futures = []
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            for f in files:
+                futures.append(executor.submit(process, f, args.intput_dir, args.output_dir, c, draw_type))
 
-            print('save image ', i, save_file)
-            i += 1
-
+            for f in futures:
+                print(f.result())
+                print("进度:", i, "/", sum)
+                i += 1
         return
 
     return

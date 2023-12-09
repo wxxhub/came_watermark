@@ -50,7 +50,7 @@ def test_video_use_2():
 
 
 if __name__ == '__main__':
-    test_bottom_watermark()
-    test_bottom_frame()
-    test_video_use()
+    # test_bottom_watermark()
+    # test_bottom_frame()
+    # test_video_use()
     test_video_use_2()
