@@ -10,7 +10,7 @@ class ExifInfo:
     ExifImageWidth: int
     ExifImageHeight:int
     FocalLength = 0
-    FNumber:float
+    FNumber:float=8
     ExposureTime = ""
     DateTimeOriginal = ""
     ISOSpeedRatings = ""

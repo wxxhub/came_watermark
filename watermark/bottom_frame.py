@@ -99,8 +99,11 @@ def parse_datetime(datetime_string):
 
 
 def get_logo(exif_info: exif.ExifInfo):
+    # print(exif_info.Make)
     if exif_info.Make == 'SONY':
         logo = Image.open("logos/sony.png")
+    if exif_info.Make == 'DJI':
+        logo = Image.open("logos/dji.jpeg")
     elif exif_info.Make == 'NIKON':
         logo = Image.open("logos/nikon1.png")
     elif exif_info.Make == 'Canon':
@@ -123,13 +126,14 @@ def get_logo(exif_info: exif.ExifInfo):
 
 SHADOW_PADDING = 50
 
-def distance(point1, point2):
 
+def distance(point1, point2):
     x1, y1 = point1
 
     x2, y2 = point2
 
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
 
 class BottomFrameWatermark(Watermark):
     def draw(self, img: Image, config: Config, exif_info: exif.ExifInfo) -> Image:
@@ -148,24 +152,24 @@ class BottomFrameWatermark(Watermark):
             opx1 = ExifPadding
             opy1 = ExifPadding
 
-            opx2 = ExifPadding+img.width
-            opy2 = ExifPadding+img.height
+            opx2 = ExifPadding + img.width
+            opy2 = ExifPadding + img.height
 
             cd = 150
-            for i in range(1, SHADOW_PADDING+1):
-                px1 = opx1-i
-                py1 = opy1-i
+            for i in range(1, SHADOW_PADDING + 1):
+                px1 = opx1 - i
+                py1 = opy1 - i
 
-                px2 = opx2+i
-                py2 = opy2+i
+                px2 = opx2 + i
+                py2 = opy2 + i
 
-                c = cd+i*2
-                iss = i**2
+                c = cd + i * 2
+                iss = i ** 2
                 for x in range(px1, px2 + 1):
                     if x < opx1 or x > opx2:
-                        xd = max(opx1-x, x-opx2)
-                        d = int(math.sqrt(xd**2 + iss))
-                        c2 = cd+d*2
+                        xd = max(opx1 - x, x - opx2)
+                        d = int(math.sqrt(xd ** 2 + iss))
+                        c2 = cd + d * 2
                         draw.point((x, py1), fill=(c2, c2, c2))
                         draw.point((x, py2), fill=(c2, c2, c2))
                     else:
@@ -174,9 +178,9 @@ class BottomFrameWatermark(Watermark):
 
                 for y in range(py1, py2 + 1):
                     if y < opy1 or y > opy2:
-                        yd = max(opy1-y, y-opy2)
-                        d = int(math.sqrt(yd**2 + iss))
-                        c2 = cd+d*2
+                        yd = max(opy1 - y, y - opy2)
+                        d = int(math.sqrt(yd ** 2 + iss))
+                        c2 = cd + d * 2
                         draw.point((px1, y), fill=(c2, c2, c2))
                         draw.point((px2, y), fill=(c2, c2, c2))
                     else:

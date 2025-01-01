@@ -21,6 +21,7 @@ def args_parser():
                                                                               "'video_use']")
     parser.add_argument('-s', '--with_shadow', type=bool, default=False, help="image with shadow")
     parser.add_argument('-c', '--children', type=str, default="", help="children type")
+    parser.add_argument('-t', '--thread', type=str, default="", help="children type")
     return parser.parse_args()
 
 
@@ -75,7 +76,8 @@ def process(f, intput_dir, output_dir, config, draw_type):
         return "不支持的文件类型:" + f
 
     file = os.path.join(intput_dir, f)
-    out_file_name = 'm_' + f
+    # out_file_name = 'm_' + f
+    out_file_name = f
     save_file = os.path.join(output_dir, out_file_name)
     add_watermark(config, file, save_file, draw_type)
 
@@ -105,7 +107,7 @@ def main():
         file = args.file[0]
         file_name = os.path.basename(args.file[0])
         print("file_name ", file_name)
-        save_file = os.path.join(output_dir, 'm_' + file_name)
+        save_file = os.path.join(output_dir, file_name)
         add_watermark(c, file, save_file, draw_type)
         print('save image ', save_file)
 

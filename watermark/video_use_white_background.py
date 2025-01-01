@@ -26,7 +26,8 @@ class VideoUseWhiteBackgroundWatermark(Watermark):
             # 超出画布
             resize_w = WIDTH_8K
             resize_h = int(WIDTH_8K / m_img.width * m_img.height)
-            top_padding = int(HEIGHT_8K-resize_h) / 2
+            left_padding = 0
+            top_padding = int((HEIGHT_8K-resize_h) / 2)
 
         m_img = m_img.resize((resize_w, resize_h), Image.Resampling.LANCZOS)
         im_blur.paste(m_img, (left_padding, top_padding))
